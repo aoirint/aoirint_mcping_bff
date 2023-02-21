@@ -4,6 +4,7 @@ services:
     build: .
     restart: always
     environment:
+      MCPING_BFF_CORS_ALLOW_ORIGINS: ${MCPING_BFF_CORS_ALLOW_ORIGINS}
       MCPING_WEB_API_URL: ${MCPING_WEB_API_URL}
       MCPING_WEB_API_READ_API_KEY: ${MCPING_WEB_API_READ_API_KEY}
     ports:

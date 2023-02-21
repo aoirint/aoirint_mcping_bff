@@ -3,12 +3,23 @@ from urllib.parse import urljoin
 
 import requests
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, parse_obj_as
+
+MCPING_BFF_CORS_ALLOW_ORIGINS = os.environ["MCPING_BFF_CORS_ALLOW_ORIGINS"].split(",")
 
 MCPING_WEB_API_URL = os.environ["MCPING_WEB_API_URL"]
 MCPING_WEB_API_READ_API_KEY = os.environ["MCPING_WEB_API_READ_API_KEY"]
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=MCPING_BFF_CORS_ALLOW_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class BedrockServer(BaseModel):
