@@ -1,0 +1,10 @@
+# License: CC0-1.0
+services:
+  bff:
+    build: .
+    restart: always
+    environment:
+      MCPING_WEB_API_URL: ${MCPING_WEB_API_URL}
+      MCPING_WEB_API_READ_API_KEY: ${MCPING_WEB_API_READ_API_KEY}
+    ports:
+      - "${MCPING_BFF_HOST_PORT}:5000"
