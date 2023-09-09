@@ -4,7 +4,7 @@ from urllib.parse import urljoin
 import requests
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, parse_obj_as
+from pydantic import BaseModel, TypeAdapter
 
 MCPING_BFF_CORS_ALLOW_ORIGINS = os.environ["MCPING_BFF_CORS_ALLOW_ORIGINS"].split(",")
 
@@ -107,7 +107,7 @@ async def bedrock_servers() -> list[BedrockServerResponseItem]:
         },
     )
     res.raise_for_status()
-    bedrock_servers = parse_obj_as(list[BedrockServer], res.json())
+    bedrock_servers = TypeAdapter(list[BedrockServer]).validate_python(res.json())
 
     ret: list[BedrockServerResponseItem] = []
     for bedrock_server in bedrock_servers:
@@ -122,7 +122,9 @@ async def bedrock_servers() -> list[BedrockServerResponseItem]:
             },
         )
         res.raise_for_status()
-        bedrock_ping_records = parse_obj_as(list[BedrockPingRecord], res.json())
+        bedrock_ping_records = TypeAdapter(list[BedrockPingRecord]).validate_python(
+            res.json()
+        )
         if len(bedrock_ping_records) == 0:
             continue
 
@@ -154,7 +156,7 @@ async def java_servers() -> list[JavaServerResponseItem]:
         },
     )
     res.raise_for_status()
-    java_servers = parse_obj_as(list[JavaServer], res.json())
+    java_servers = TypeAdapter(list[JavaServer]).validate_python(res.json())
 
     ret: list[JavaServerResponseItem] = []
     for java_server in java_servers:
@@ -169,7 +171,9 @@ async def java_servers() -> list[JavaServerResponseItem]:
             },
         )
         res.raise_for_status()
-        java_ping_records = parse_obj_as(list[JavaPingRecord], res.json())
+        java_ping_records = TypeAdapter(list[JavaPingRecord]).validate_python(
+            res.json()
+        )
         if len(java_ping_records) == 0:
             continue
 
