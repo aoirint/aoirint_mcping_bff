@@ -99,7 +99,7 @@ class JavaServerResponseItem(BaseModel):
 
 
 @app.get("/bedrock_servers", response_model=list[BedrockServerResponseItem])
-async def bedrock_servers():
+async def bedrock_servers() -> list[BedrockServerResponseItem]:
     res = requests.post(
         urljoin(MCPING_WEB_API_URL, "bedrock_server/list"),
         headers={
@@ -118,7 +118,7 @@ async def bedrock_servers():
             },
             params={
                 "bedrock_server_id": bedrock_server.id,
-                "count": 1,
+                "count": "1",
             },
         )
         res.raise_for_status()
@@ -146,7 +146,7 @@ async def bedrock_servers():
 
 
 @app.get("/java_servers", response_model=list[JavaServerResponseItem])
-async def java_servers():
+async def java_servers() -> list[JavaServerResponseItem]:
     res = requests.post(
         urljoin(MCPING_WEB_API_URL, "java_server/list"),
         headers={
@@ -165,7 +165,7 @@ async def java_servers():
             },
             params={
                 "java_server_id": java_server.id,
-                "count": 1,
+                "count": "1",
             },
         )
         res.raise_for_status()
