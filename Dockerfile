@@ -2,6 +2,7 @@
 FROM python:3.11
 
 ARG DEBIAN_FRONTEND=noninteractive
+ARG PIP_NO_CACHE_DIR=1
 ENV PYTHONUNBUFFERED=1
 ENV PATH=/code/aoirint_mcping_bff/.venv/bin:/home/user/.local/bin:${PATH}
 
