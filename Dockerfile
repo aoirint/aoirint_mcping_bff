@@ -1,12 +1,17 @@
 # syntax=docker/dockerfile:1.6
 FROM python:3.11
 
+ARG DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+ENV PATH=/code/aoirint_mcping_bff/.venv/bin:/home/user/.local/bin:${PATH}
+
 RUN <<EOF
     set -eu
 
     apt-get update
     apt-get install -y \
         gosu
+
     apt-get clean
     rm -rf /var/lib/apt/lists/*
 EOF
@@ -18,16 +23,41 @@ RUN <<EOF
     useradd --non-unique --uid 1000 --gid 1000 --create-home user
 EOF
 
-ENV PATH=/home/user/.local/bin:${PATH}
-
-WORKDIR /work
-ADD ./requirements.txt /work/
+ARG POETRY_VERSION=1.7.1
 RUN <<EOF
     set -eu
 
-    gosu user pip3 install -r /work/requirements.txt
+    gosu user pip install "poetry==${POETRY_VERSION}"
+
+    gosu user poetry config virtualenvs.in-project true
+
+    mkdir -p /home/user/.cache/pypoetry/{cache,artifacts}
+    chown -R "user:user" /home/user/.cache
 EOF
 
-ADD main.py /work/
+RUN <<EOF
+    set -eu
 
-CMD [ "gosu", "user", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000" ]
+    mkdir -p /code/aoirint_mcping_bff
+    chown -R "user:user" /code/aoirint_mcping_bff
+EOF
+
+WORKDIR /code/aoirint_mcping_bff
+ADD --chown=1000:1000 ./pyproject.toml ./poetry.lock ./README.md /code/aoirint_mcping_bff/
+RUN --mount=type=cache,uid=1000,gid=1000,target=/home/user/.cache/pypoetry/cache \
+    --mount=type=cache,uid=1000,gid=1000,target=/home/user/.cache/pypoetry/artifacts <<EOF
+    set -eu
+
+    gosu user poetry install --no-root --only main
+EOF
+
+ADD --chown=1000:1000 ./aoirint_mcping_bff /code/aoirint_mcping_bff/aoirint_mcping_bff
+ADD --chown=1000:1000 ./main.py /code/aoirint_mcping_bff/
+RUN --mount=type=cache,uid=1000,gid=1000,target=/home/user/.cache/pypoetry/cache \
+    --mount=type=cache,uid=1000,gid=1000,target=/home/user/.cache/pypoetry/artifacts <<EOF
+    set -eu
+
+    gosu user poetry install --only main
+EOF
+
+CMD [ "gosu", "user", "poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000" ]
