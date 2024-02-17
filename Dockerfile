@@ -44,7 +44,7 @@ RUN <<EOF
 EOF
 
 WORKDIR /code/aoirint_mcping_bff
-ADD --chown=1000:1000 ./pyproject.toml ./poetry.lock ./README.md /code/aoirint_mcping_bff/
+ADD --chown=1000:1000 ./pyproject.toml ./poetry.lock /code/aoirint_mcping_bff/
 RUN --mount=type=cache,uid=1000,gid=1000,target=/home/user/.cache/pypoetry/cache \
     --mount=type=cache,uid=1000,gid=1000,target=/home/user/.cache/pypoetry/artifacts <<EOF
     set -eu
@@ -53,7 +53,7 @@ RUN --mount=type=cache,uid=1000,gid=1000,target=/home/user/.cache/pypoetry/cache
 EOF
 
 ADD --chown=1000:1000 ./aoirint_mcping_bff /code/aoirint_mcping_bff/aoirint_mcping_bff
-ADD --chown=1000:1000 ./main.py /code/aoirint_mcping_bff/
+ADD --chown=1000:1000 ./README.md ./main.py /code/aoirint_mcping_bff/
 RUN --mount=type=cache,uid=1000,gid=1000,target=/home/user/.cache/pypoetry/cache \
     --mount=type=cache,uid=1000,gid=1000,target=/home/user/.cache/pypoetry/artifacts <<EOF
     set -eu
