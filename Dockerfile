@@ -14,8 +14,8 @@ EOF
 RUN <<EOF
     set -eu
 
-    groupadd -o -g 1000 user
-    useradd -m -o -u 1000 -g user user
+    groupadd --non-unique --gid 1000 user
+    useradd --non-unique --uid 1000 --gid 1000 --create-home user
 EOF
 
 ENV PATH=/home/user/.local/bin:${PATH}
