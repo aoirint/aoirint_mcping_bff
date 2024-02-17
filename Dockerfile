@@ -2,6 +2,8 @@
 FROM python:3.11
 
 RUN <<EOF
+    set -eu
+
     apt-get update
     apt-get install -y \
         gosu
@@ -10,6 +12,8 @@ RUN <<EOF
 EOF
 
 RUN <<EOF
+    set -eu
+
     groupadd -o -g 1000 user
     useradd -m -o -u 1000 -g user user
 EOF
@@ -19,6 +23,8 @@ ENV PATH=/home/user/.local/bin:${PATH}
 WORKDIR /work
 ADD ./requirements.txt /work/
 RUN <<EOF
+    set -eu
+
     gosu user pip3 install -r /work/requirements.txt
 EOF
 
