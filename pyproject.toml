@@ -26,7 +26,7 @@ python = "~3.11"
 fastapi = "^0.109.1"
 pydantic = "^2.3.0"
 uvicorn = "^0.20.0"
-requests = "^2.31.0"
+requests = "^2.32.0"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.0"
