@@ -31,4 +31,4 @@ jobs:
 
       - name: Run lint
         shell: bash
-        run: poetry run pysen run lint
+        run: poetry run ruff check
