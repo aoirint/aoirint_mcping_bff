@@ -25,7 +25,7 @@ packages = [{include = "aoirint_mcping_bff"}]
 python = "~3.11"
 fastapi = {extras = ["standard"], version = "^0.115.5"}
 pydantic = "^2.10.2"
-uvicorn = "^0.29.0"
+uvicorn = "^0.32.1"
 requests = "^2.32.2"
 
 [tool.poetry.group.dev.dependencies]
