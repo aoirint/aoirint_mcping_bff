@@ -2,7 +2,13 @@
 
 ## Library management
 
+- Python 3.11
+
 This repository uses [Poetry](https://github.com/python-poetry/poetry).
+
+```shell
+poetry install
+```
 
 ## Code format
 
