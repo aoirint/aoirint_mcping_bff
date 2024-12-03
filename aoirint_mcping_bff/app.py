@@ -2,14 +2,16 @@ import os
 from urllib.parse import urljoin
 
 import requests
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, TypeAdapter
 
-MCPING_BFF_CORS_ALLOW_ORIGINS = os.environ["MCPING_BFF_CORS_ALLOW_ORIGINS"].split(",")
+MCPING_BFF_CORS_ALLOW_ORIGINS = os.environ.get(
+    "MCPING_BFF_CORS_ALLOW_ORIGINS", ""
+).split(",")
 
-MCPING_WEB_API_URL = os.environ["MCPING_WEB_API_URL"]
-MCPING_WEB_API_READ_API_KEY = os.environ["MCPING_WEB_API_READ_API_KEY"]
+MCPING_WEB_API_URL = os.environ.get("MCPING_WEB_API_URL")
+MCPING_WEB_API_READ_API_KEY = os.environ.get("MCPING_WEB_API_READ_API_KEY", "")
 
 app = FastAPI()
 
@@ -100,6 +102,9 @@ class JavaServerResponseItem(BaseModel):
 
 @app.get("/bedrock_servers", response_model=list[BedrockServerResponseItem])
 async def bedrock_servers() -> list[BedrockServerResponseItem]:
+    if not MCPING_WEB_API_URL:
+        raise HTTPException(status_code=500, detail="MCPING_WEB_API_URL is not set")
+
     res = requests.post(
         urljoin(MCPING_WEB_API_URL, "bedrock_server/list"),
         headers={
@@ -149,6 +154,9 @@ async def bedrock_servers() -> list[BedrockServerResponseItem]:
 
 @app.get("/java_servers", response_model=list[JavaServerResponseItem])
 async def java_servers() -> list[JavaServerResponseItem]:
+    if not MCPING_WEB_API_URL:
+        raise HTTPException(status_code=500, detail="MCPING_WEB_API_URL is not set")
+
     res = requests.post(
         urljoin(MCPING_WEB_API_URL, "java_server/list"),
         headers={

@@ -61,4 +61,7 @@ RUN --mount=type=cache,uid=1000,gid=1000,target=/home/user/.cache/pypoetry/cache
     gosu user poetry install --only main
 EOF
 
-CMD [ "gosu", "user", "poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000" ]
+ENV MCPING_BFF_HOST=0.0.0.0
+ENV MCPING_BFF_PORT=5000
+
+CMD [ "gosu", "user", "poetry", "run", "python", "-m", "aoirint_mcping_bff" ]
