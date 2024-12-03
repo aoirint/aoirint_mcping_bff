@@ -2,7 +2,7 @@
 
 ## Get started
 
-- Python 3.11
+- Python 3.12
 
 This repository uses [Poetry](https://github.com/python-poetry/poetry).
 
